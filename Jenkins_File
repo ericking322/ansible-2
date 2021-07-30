@@ -1,0 +1,18 @@
+pipeline {
+    agent any    
+    stages {
+        stage('git clone') {
+            steps {
+              git branch: 'main', url: "https://github.com/ramesh-DevOps/ansible.git"  
+              sh "ls -ll"
+            }
+        }
+        stage("Generate and Store New Passowrd") {
+            steps {
+                withAWS(credentials: 'aws_credentials', region: 'us-west-2') {
+                    sh "ansible-playbook password.yml -vvv" 
+                }
+            }
+        }
+    }
+}
