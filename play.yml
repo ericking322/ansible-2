@@ -1,0 +1,15 @@
+gather_facts: false
+hosts: localhost
+tasks:
+    - set_fact:
+        pw1: "{{ lookup('password', '/dev/null chars=ascii_lowercase length=6') }}"
+        pw2: "{{ lookup('password', '/dev/null chars=ascii_uppercase length=6') }}"
+        pw3: "{{ lookup('password', '/dev/null chars=digits          length=6') }}"
+        pw4: "{{ lookup('password', '/dev/null chars=_,!,%,*,(,),-,+ length=6') }}"
+ 
+    - set_fact:
+        random_password: "{{ (pw1+pw2+pw3+pw4)|shuffle|join('') }}"
+ 
+    - name: Display the password
+      debug:
+        msg: "Your Password is {{ random_password }}"
